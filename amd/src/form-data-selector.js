@@ -27,8 +27,8 @@ define(['jquery', 'core/ajax', 'core/templates'], function ($, Ajax, Templates) 
          var options = [];
          $.each(results, function(index, data) {
              options.push({
-                 value: data.value,
-                 label: data.label
+                 value: data.id,
+                 label: data.data
              });
          });
          return options;
@@ -43,7 +43,7 @@ define(['jquery', 'core/ajax', 'core/templates'], function ($, Ajax, Templates) 
        * @param {Function} failure A callback function to be called in case of failure, receiving the error message.
        * @return {Void}                                                                                                           
       */
-      transport: function (selector, query, callback, failure) {
+      transport: function (selector, query, success, failure) {
          var fieldname = selector.split('_').pop()
          var promise;
 
@@ -55,33 +55,9 @@ define(['jquery', 'core/ajax', 'core/templates'], function ($, Ajax, Templates) 
             }
          }]);
 
-         promise[0].then(function(results) {
-            var promises = [],
-            i = 0;
-            return results
-         }).then(callback).catch(Notification.exception);
-      },
+         promise[0].then(success).fail(failure);
 
-      /**                                                                                                                         
-       * Source of data for Ajax element.
-       *
-       * @param {String} selector The selector of the auto complete element.
-       * @param {String} query The query string.                        
-       * @param {Function} callback A callback function receiving an array of results.
-       * @param {Function} failure A callback function to be called in case of failure, receiving the error message.
-       * @return {Void}                                                                                                           
-      */
-      processResults: function (selector, results) {
-         var users = [];
-         $.each(results, function (index, user) {
-            users.push({
-               value: user.id,
-               label: user._label
-            });
-         });
-         return users;
-      },
-
+      }
 
    }
 });
