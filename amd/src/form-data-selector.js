@@ -16,14 +16,23 @@
 /**
  * Enrolled user selector module.
  *
- * @module     mod_forum/form-user-selector
+ * @module     profilefield_autocomplete/form-user-selector
  * @copyright  2019 Shamim Rezaie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 define(['jquery', 'core/ajax', 'core/templates'], function ($, Ajax, Templates) {
    return /** @alias module:profilefield_autocomplete/form-data-selector */ {
-
+      processResults: function(selector, results) {
+         var options = [];
+         $.each(results, function(index, data) {
+             options.push({
+                 value: data.value,
+                 label: data.label
+             });
+         });
+         return options;
+     },
 
       /**                                                                                                                         
        * Source of data for Ajax element.
@@ -35,7 +44,22 @@ define(['jquery', 'core/ajax', 'core/templates'], function ($, Ajax, Templates) 
        * @return {Void}                                                                                                           
       */
       transport: function (selector, query, callback, failure) {
-         return true;
+         var fieldname = selector.split('_').pop()
+         var promise;
+
+         promise = Ajax.call([{
+            methodname: 'profilefield_autocomplete_search_data',
+            args: {
+               'search': query,
+               'fieldname': fieldname
+            }
+         }]);
+
+         promise[0].then(function(results) {
+            var promises = [],
+            i = 0;
+            return results
+         }).then(callback).catch(Notification.exception);
       },
 
       /**                                                                                                                         

@@ -17,6 +17,7 @@
 defined('MOODLE_INTERNAL') || die;
 global $CFG;
 require_once("$CFG->libdir/externallib.php");
+require_once("$CFG->dirroot/user/profile/lib.php");
 
 /**
  * Format tiles external functions
@@ -34,7 +35,8 @@ class profilefield_autocomplete_external extends external_api
     public static function search_data_parameters() {
         return new external_function_parameters(
             array(
-               //if I had any parameters, they would be described here. But I don't have any, so this array is empty.
+               'search' => new external_value(PARAM_TEXT, 'O texto da pesquisa'),
+               'fieldname'=> new external_value(PARAM_TEXT, 'Nome do campo de pefil')
             )
         );
     }
@@ -43,16 +45,42 @@ class profilefield_autocomplete_external extends external_api
         return new external_multiple_structure(
             new external_single_structure(
                 array(
-                    'id' => new external_value(PARAM_INT, 'group record id'),
+                    'id' => new external_value(PARAM_TEXT, 'group record id'),
                     'data' => new external_value(PARAM_TEXT, 'multilang compatible name'),
                 )
             )
         );
     }
 
+    //function get_field_id_by_name()
 
-    function search_data ($search_data_parameters) {
-        return true;
+
+    function search_data ($q, $fieldname) {
+        global $USER, $DB;
+        $DB->set_debug(true);
+
+        $profilefields = profile_get_user_fields_with_data($USER->id);
+        $field = profile_get_custom_field_data_by_shortname($fieldname);
+
+        $sql = $field->param1;
+        $like1 = $DB->sql_like(
+            'description',
+            ':description', 
+            $casesensitive = false, 
+            $accentsensitive = false
+        );
+
+        $result = $DB->get_records_sql(
+            $sql . ' WHERE ' . $like1,
+            ['description'=>'%'.$q.'%'],
+            $limitfrom=0, 
+            $limitnum=50
+        );
+
+        //var_dump($result);
+        //var_dump('$field', $field);
+        //var_dump($USER);
+        return $result;
     }
 
 
