@@ -20,13 +20,11 @@ require_once("$CFG->libdir/externallib.php");
 require_once("$CFG->dirroot/user/profile/lib.php");
 
 /**
- * Format tiles external functions
- *
- * @package    format_tiles
- * @category   external
- * @copyright  2018 David Watson {@link http://evolutioncode.uk}
+ * 
+ * @package    profilefield_autocomplete
+ * @category   profilefield
+ * @copyright  2021 Murilo Timo Neto
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since      Moodle 3.3
  */
 class profilefield_autocomplete_external extends external_api
 {
@@ -52,34 +50,28 @@ class profilefield_autocomplete_external extends external_api
         );
     }
 
-    //function get_field_id_by_name()
-
-
     function search_data ($q, $fieldname) {
         global $USER, $DB;
-        $DB->set_debug(true);
 
-        $profilefields = profile_get_user_fields_with_data($USER->id);
         $field = profile_get_custom_field_data_by_shortname($fieldname);
-
-        $sql = $field->param1;
-        $like1 = $DB->sql_like(
-            'description',
-            ':description', 
+        
+        list($id,$label,$table) = explode(',', $field->param1);
+        $sql = "SELECT $id AS ID, $label AS DATA FROM $table";
+        
+        $like = $DB->sql_like(
+            $label,
+            ":$label", 
             $casesensitive = false, 
             $accentsensitive = false
         );
 
         $result = $DB->get_records_sql(
-            $sql . ' WHERE ' . $like1,
-            ['description'=>'%'.$q.'%'],
-            $limitfrom=0, 
+            $sql . ' WHERE ' . $like,
+            [$label=>'%'.$q.'%'],
+            $limitfrom=0,
             $limitnum=50
         );
 
-        //var_dump($result);
-        //var_dump('$field', $field);
-        //var_dump($USER);
         return $result;
     }
 

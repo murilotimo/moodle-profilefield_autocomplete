@@ -32,6 +32,8 @@ $string['queryerrorempty'] = "No results found executing the query: cannnot vali
 $string['queryerroridmissing'] = 'id column is missing in query return values';
 $string['queryerrordatamissing'] = 'data column is missing in query return values';
 $string['queryerrordefaultmissing'] = 'Default value {$a} does not exists among the list of allowed values';
-$string['sqlquery'] = 'Sql query';
+$string['sqlfields'] = 'Sql fields and table';
+$string['sqlfields_help'] = 'The table field that will be used as the id, the field that will be used as the label and the table name, separated by a comma, example:
+id,label,table_name';
 $string['sqlerror'] = 'Error executing the query';
 $string['queryerrormulipledefault'] = 'Single select can have one default value but {$a} values found';

@@ -26,6 +26,8 @@ class profile_field_autocomplete extends profile_field_base {
     /** @var array $selected_options */
     public $selected_options;
 
+    /** @var array $selected_options */
+    public $sql;
 
     
     /**
@@ -39,7 +41,6 @@ class profile_field_autocomplete extends profile_field_base {
      */
     public function __construct($fieldid=0, $userid=0, $fielddata=null) {
         global $DB;
-        //$DB->set_debug(true);
         //first call parent constructor
         parent::__construct($fieldid, $userid, $fielddata=null);
 
@@ -55,10 +56,12 @@ class profile_field_autocomplete extends profile_field_base {
             if ($datafield !== false) {
                 $this->data = explode("|", $datafield);
 
-                $sql = $this->field->param1;
+                list($id,$label,$table) = explode(',', $this->field->param1);
+                $this->sql = "SELECT $id AS ID, $label AS DATA FROM $table";
+
                 list($insql, $inparams) = $DB->get_in_or_equal($this->data);
                 $this->selected_options = $DB->get_records_sql_menu(
-                    $sql . ' WHERE cconvenio ' . $insql,
+                    $this->sql . " WHERE $label " . $insql,
                     $inparams
                 );
                
@@ -76,7 +79,7 @@ class profile_field_autocomplete extends profile_field_base {
     public function get_options_array() : array {
         global $DB;
 
-        $sql = $this->field->param1;
+        $sql = $this->sql;
         $sql .= ' limit 50';
         if ($sql) {
             $resultset = $DB->get_records_sql($sql);
@@ -96,20 +99,16 @@ class profile_field_autocomplete extends profile_field_base {
      * @param moodleform $mform instance of the moodleform class
      */
     function edit_field_add($mform) {
-        global $PAGE;
-
         $options = $this->get_options_array();
-
         $formattedoptions = $options;
         
-        //$PAGE->requires->js_call_amd("profilefield_autocomplete/form-data-selector");
-
         $attributes = [
             'multiple' => true,
             'noselectionstring' => 'Selecione os parceiros aos quais você está vinculado',
             'placeholder' => 'Código ou nome do parceiro',
             'ajax' => 'profilefield_autocomplete/form-data-selector'
         ];
+        
         $mform->addElement(
             'autocomplete',
             $this->inputname,
@@ -174,4 +173,3 @@ class profile_field_autocomplete extends profile_field_base {
         }
     }
 }
-

@@ -35,27 +35,15 @@ class profile_define_autocomplete extends profile_define_base
     function define_form_specific(\MoodleQuickForm $mform)
     {
         $mform->addElement(
-            'advcheckbox',
-            'param2',
-            get_string('enablemultiselect', 'profilefield_autocomplete'),
-            '',
-            array('group' => 1),
-            array(0, 1)
-        );
-
-        $mform->addElement(
-            'textarea',
+            'text',
             'param1',
-            get_string('sqlquery', 'profilefield_autocomplete'),
-            array('rows' => 7, 'cols' => 52)
+            get_string('sqlfields', 'profilefield_autocomplete'),
+            'size="50"'
         );
         $mform->setType('param1', PARAM_RAW);
-
-        $mform->addElement('text', 'configdata[defaultvalue]', get_string('defaultvalue', 'core_customfield'), 'size="50"');
-        $mform->setType('configdata[defaultvalue]', PARAM_RAW);
         $mform->addHelpButton(
-            'configdata[defaultvalue]',
-            'defaultvalue',
+            'param1',
+            'sqlfields',
             'profilefield_autocomplete'
         );
     }
@@ -73,7 +61,9 @@ class profile_define_autocomplete extends profile_define_base
         global $DB;
         $err = array();
         try {
-            $sql = $data->param1;
+            list($id,$label,$table) = explode(',', $data->param1);
+            $sql = "SELECT $id AS ID, $label AS DATA FROM $table";
+
             if (!isset($sql) || $sql == '') {
                 $err['configdata[param1]'] = get_string('err_required', 'form');
             } else {
