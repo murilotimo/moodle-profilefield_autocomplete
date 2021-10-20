@@ -41,6 +41,7 @@ class profile_field_autocomplete extends profile_field_base {
      */
     public function __construct($fieldid=0, $userid=0, $fielddata=null) {
         global $DB;
+        //$DB->set_debug(true);
         //first call parent constructor
         parent::__construct($fieldid, $userid, $fielddata=null);
 
@@ -61,7 +62,7 @@ class profile_field_autocomplete extends profile_field_base {
 
                 list($insql, $inparams) = $DB->get_in_or_equal($this->data);
                 $this->selected_options = $DB->get_records_sql_menu(
-                    $this->sql . " WHERE $label " . $insql,
+                    $this->sql . " WHERE $id " . $insql,
                     $inparams
                 );
                
@@ -124,10 +125,11 @@ class profile_field_autocomplete extends profile_field_base {
      * @return string data for custom profile field.
      */
     function display_data() {
-        $html = "";
-        foreach ($this->data as $key) {
-            $html .= $key . " ";
+        $html = html_writer::start_tag('ul');
+        foreach ($this->selected_options as $key => $value) {
+            $html .= html_writer::tag('li', $value, ['data-id'=>$key]);
         }
+        $html .= html_writer::end_tag('ul');
         return $html;
     }
 
