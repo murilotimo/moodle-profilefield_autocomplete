@@ -14,37 +14,37 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Enrolled user selector module.
+ * Profile Field Autocomplete plugin.
  *
  * @module     profilefield_autocomplete/form-user-selector
  * @copyright  2019 Shamim Rezaie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery', 'core/ajax', 'core/templates'], function ($, Ajax, Templates) {
+define(['jquery', 'core/ajax'], function ($, Ajax) {
    return /** @alias module:profilefield_autocomplete/form-data-selector */ {
-      processResults: function(selector, results) {
+      processResults: function (selector, results) {
          var options = [];
-         $.each(results, function(index, data) {
-             options.push({
-                 value: data.id,
-                 label: data.data
-             });
+         $.each(results, function (index, data) {
+            options.push({
+               value: data.id,
+               label: data.data
+            });
          });
          return options;
-     },
+      },
 
-      /**                                                                                                                         
+      /**
        * Source of data for Ajax element.
        *
        * @param {String} selector The selector of the auto complete element.
-       * @param {String} query The query string.                        
+       * @param {String} query The query string.
        * @param {Function} callback A callback function receiving an array of results.
        * @param {Function} failure A callback function to be called in case of failure, receiving the error message.
-       * @return {Void}                                                                                                           
+       * @return {Void}
       */
       transport: function (selector, query, success, failure) {
-         var fieldname = selector.split('_').pop()
+         var fieldname = selector.replace('#id_profile_field_','');
          var promise;
 
          promise = Ajax.call([{
@@ -56,8 +56,6 @@ define(['jquery', 'core/ajax', 'core/templates'], function ($, Ajax, Templates) 
          }]);
 
          promise[0].then(success).fail(failure);
-
       }
-
-   }
+   };
 });
