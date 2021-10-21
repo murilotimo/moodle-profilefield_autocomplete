@@ -51,10 +51,17 @@ class profilefield_autocomplete_external extends external_api
     }
 
     function search_data ($q, $fieldname) {
-        global $USER, $DB;
+        global $DB;
 
-        $field = profile_get_custom_field_data_by_shortname($fieldname);
-        
+        $fields = profile_get_custom_fields();
+
+        $field = null;
+        foreach ($fields as $ifield) {
+            if ($ifield->shortname === $fieldname) {
+                $field = $ifield;
+            }
+        }
+
         list($id,$label,$table) = explode(',', $field->param1);
         $sql = "SELECT $id AS ID, $label AS DATA FROM $table";
         
