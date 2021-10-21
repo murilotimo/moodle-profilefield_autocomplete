@@ -79,18 +79,16 @@ class profile_field_autocomplete extends profile_field_base {
      */
     public function get_options_array() : array {
         global $DB;
-
         $sql = $this->sql;
-        $sql .= ' limit 50';
+        $options = array();
         if ($sql) {
-            $resultset = $DB->get_records_sql($sql);
-            $options = array();
-            foreach ($resultset as $key => $option) {
-                $options[format_string($key)] = $option->data;
-            }
-        } else {
-            $options = array();
-        }
+            $resultset = $DB->get_records_sql_menu($sql, $params=null, $limitfrom=0, $limitnum=10);
+            $options = array_unique(
+                array_merge($resultset, $this->selected_options),
+                SORT_REGULAR
+            );
+        } 
+
         return $options;
     }
 
