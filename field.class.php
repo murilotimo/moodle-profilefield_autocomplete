@@ -81,13 +81,11 @@ class profile_field_autocomplete extends profile_field_base {
         global $DB;
         $sql = $this->sql;
         $options = array();
+
         if ($sql) {
             $resultset = $DB->get_records_sql_menu($sql, $params=null, $limitfrom=0, $limitnum=10);
-            $options = array_unique(
-                array_merge($resultset, $this->selected_options),
-                SORT_REGULAR
-            );
-        } 
+            $options = $resultset + $this->selected_options;
+        }
 
         return $options;
     }
