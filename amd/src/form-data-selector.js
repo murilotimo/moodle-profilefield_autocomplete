@@ -17,7 +17,7 @@
  * Profile Field Autocomplete plugin.
  *
  * @module     profilefield_autocomplete/form-user-selector
- * @copyright  2019 Shamim Rezaie
+ * @copyright  2021 Murilo Timo
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

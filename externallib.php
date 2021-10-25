@@ -20,11 +20,10 @@ require_once("$CFG->libdir/externallib.php");
 require_once("$CFG->dirroot/user/profile/lib.php");
 
 /**
- * 
- * @package    profilefield_autocomplete
- * @category   profilefield
- * @copyright  2021 Murilo Timo Neto
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @category  Profilefield
+ * @package   Profilefield_Autocomplete
+ * @copyright 2021 Murilo Timo Neto
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class profilefield_autocomplete_external extends external_api
 {
