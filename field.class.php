@@ -41,8 +41,6 @@ class profile_field_autocomplete extends profile_field_base {
      */
     public function __construct($fieldid=0, $userid=0, $fielddata=null) {
         global $DB;
-        //$DB->set_debug(true);
-        //first call parent constructor
         parent::__construct($fieldid, $userid, $fielddata=null);
 
         if (!empty($this->field)) {
@@ -101,8 +99,8 @@ class profile_field_autocomplete extends profile_field_base {
         
         $attributes = [
             'multiple' => true,
-            'noselectionstring' => 'Selecione os parceiros aos quais você está vinculado',
-            'placeholder' => 'Código ou nome do parceiro',
+            'noselectionstring' => format_string($this->field->description),
+            'placeholder' => format_string($this->field->name),
             'ajax' => 'profilefield_autocomplete/form-data-selector'
         ];
         
