@@ -41,6 +41,7 @@ class profile_define_autocomplete extends profile_define_base
             'size="50"'
         );
         $mform->setType('param1', PARAM_RAW);
+        $mform->setDefault('param1', ''); // defaults to ''
         $mform->addHelpButton(
             'param1',
             'sqlfields',

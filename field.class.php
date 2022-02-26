@@ -132,7 +132,7 @@ class profile_field_autocomplete extends profile_field_base {
      *
      * @param moodleform $mform instance of the moodleform class
      */
-    function edit_field_set_default(&$mform) {
+    function edit_field_set_default($mform) {
         if (!empty($default)) {
             $mform->setDefault($this->inputname, $this->field->defaultdata);
         }
@@ -146,7 +146,7 @@ class profile_field_autocomplete extends profile_field_base {
      * @param stdClass $datarecord The object that will be used to save the record
      * @return stdClass
      */
-    function edit_save_data_preprocess($data, &$datarecord) {
+    function edit_save_data_preprocess($data, $datarecord) {
         $string = '';
         if (is_array($data)){
             $string = implode("|",$data);
@@ -159,7 +159,7 @@ class profile_field_autocomplete extends profile_field_base {
      *
      * @param moodleform $mform instance of the moodleform class
      */
-    function edit_field_set_locked(&$mform) {
+    function edit_field_set_locked($mform) {
         if (!$mform->elementExists($this->inputname)) {
             return;
         }
